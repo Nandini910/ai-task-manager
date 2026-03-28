@@ -1,6 +1,57 @@
 @import "tailwindcss";
 
-html,
-body {
-  min-height: 100%;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    color-scheme: light;
+    transition: color 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  /*
+   * Theme color cross-fade (pairs with View Transitions on toggle in supported browsers).
+   */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke, outline-color,
+      box-shadow, text-decoration-color, opacity;
+    transition-duration: 0.45s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/*
+ * Root view transition: cross-fade when theme toggles.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms !important;
+  }
 }
